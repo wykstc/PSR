@@ -1,0 +1,81 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torchvision.models as models
+from sentence_transformers import SentenceTransformer
+from model.losses import SupConLoss
+import pytorch_lightning as pl
+import numpy as np
+from sklearn.cluster import AffinityPropagation
+
+audioResnet = models.resnet34()
+audioResnet.conv1 = nn.Conv2d(1,64,kernel_size=(1, 24), stride=(1, 4), padding=(0, 24), bias=False)
+imageResnet = torch.hub.load('facebookresearch/pytorchvideo', 'x3d_l', pretrained=True)
+faceResnet = torch.hub.load('facebookresearch/pytorchvideo', 'x3d_l', pretrained=True)
+
+class PsrResNet18(pl.LightningModule):
+    def __init__(self):
+        super(PsrResNet18, self).__init__()
+
+        self.classifierPSRAudioImage = nn.Sequential(
+            nn.Linear(512, 5),
+        )
+
+        self.criterion = SupConLoss(temperature=0.01)
+
+        self.audioResnet = nn.Sequential(
+            *(list(audioResnet.children())[:-1]),
+        )
+
+        self.imageResnet = nn.Sequential(
+            *(list(imageResnet.blocks.children())[:-1]),
+            nn.Conv3d(192, 432, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False),
+            nn.BatchNorm3d(432, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
+            nn.ReLU(),
+            nn.AvgPool3d(kernel_size=(13, 8, 8), stride=1, padding=0),
+            nn.Conv3d(432, 2048, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False)
+        )
+
+        self.faceResnet = nn.Sequential(
+            *(list(faceResnet.blocks.children())[:-1]),
+            nn.Conv3d(192, 432, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False),
+            nn.BatchNorm3d(432, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
+            nn.ReLU(),
+            nn.AvgPool3d(kernel_size=(13, 8, 8), stride=1, padding=0),
+            nn.Conv3d(432, 2048, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False)
+        )
+        self.sbert_model = SentenceTransformer("cardiffnlp/twitter-roberta-base-emotion")
+
+    def forward(self, name, audio, image, face, text, emotionEmbedding, fusionModel, current_epoch):
+        label_sets = []
+        resultInter = torch.tensor(1)
+        aud = self.audioResnet(audio).squeeze(2).squeeze(2)
+        img = self.imageResnet(image).squeeze(2).squeeze(2).squeeze(2)
+        faceImg = self.faceResnet(face).squeeze(2).squeeze(2).squeeze(2)
+        txt = torch.tensor(self.sbert_model.encode(text),device='cuda:0')
+
+        allemb = torch.cat((aud,img,faceImg,txt),1)
+        for i in allemb:
+            label_sets.append(i.cpu().detach().numpy())
+        label_sets = np.array(label_sets)
+        kmeans = AffinityPropagation(random_state=1234).fit(label_sets)
+        labels = kmeans.labels_
+        labels = torch.tensor(labels).to('cuda:0')/1.0
+        clossa = self.criterion(F.normalize(aud.unsqueeze(1), dim=2), labels) * (1 / (current_epoch + 1))
+        clossi = self.criterion(F.normalize(img.unsqueeze(1), dim=2), labels) * (1 / (current_epoch + 1))
+        clossf = self.criterion(F.normalize(faceImg.unsqueeze(1), dim=2), labels) * (1 / (current_epoch + 1))
+        closst = self.criterion(F.normalize(txt.unsqueeze(1), dim=2), labels) * (1 / (current_epoch + 1))
+        closs = (clossa + clossi + clossf + closst)
+        floss = 0
+        for i in range(aud.shape[0]):
+            InterFusion, loss = fusionModel(aud[i], txt[i], img[i], faceImg[i], emotionEmbedding[i], current_epoch)
+            if i == 0:
+                floss = loss + floss
+                resultInter = InterFusion
+                continue
+            else:
+                floss = loss + floss
+                resultInter = torch.cat((resultInter, InterFusion), 0)
+        result = self.classifierPSRAudioImage(resultInter)
+        totolloss = floss*(1/(current_epoch+1)) + closs
+        return  result, totolloss
