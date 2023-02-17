@@ -3,7 +3,7 @@
 This is the official implementation for the paper "EMP: Emotion-guided Multi-modal Fusion and Contrastive
 Learning for Personality Traits Recognition".
 
-# Structure of MERC
+# Structure of EMP
 ![image](structure.png)
 
 ## Table of Contents
