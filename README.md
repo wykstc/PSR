@@ -29,7 +29,7 @@ Please follow the paper to pre-process the data. The batch size will influence t
 ## Dataset
 Chalearn first impressions dataset can be found in [First impressions](https://chalearnlap.cvc.uab.cat/dataset/24/description/).
 
-ELEA dataset can be found on this official website and you need to apply it [ELEA](https://www.idiap.ch/en/dataset/elea).
+ELEA dataset can be found on this official website [ELEA](https://www.idiap.ch/en/dataset/elea) and you need to apply it.
 
 
 ## Usage
