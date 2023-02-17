@@ -10,7 +10,6 @@ Learning for Personality Traits Recognition".
 
 - [Dependencies](#security)
 - [Requirement](#background)
-- [Install](#install)
 - [Dataset](#dataset)
 - [Usage](#usage)
 
@@ -24,21 +23,13 @@ Please follow the paper to pre-process the data.
 
 ## Requirement
 - We use sentence transfomer for text feature extraction. [Sentence Embedding](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion)
-- We use large X3D network for visual features extraction.[X3D](https://github.com/facebookresearch/pytorchvideo)
-
-
-## Install
-To easily reproduce our results, you can install the environments by
-```
-pip install -r requirements.txt
-```
+- We use large X3D network for visual features extraction. [X3D](https://github.com/facebookresearch/pytorchvideo)
 
 
 ## Dataset
-Chalearn first impressions dataset can be found in [First impressions](https://chalearnlap.cvc.uab.cat/dataset/24/description/)
+Chalearn first impressions dataset can be found in [First impressions](https://chalearnlap.cvc.uab.cat/dataset/24/description/).
 
-The ELEA dataset can be found on this official website and you need to apply it
-[ELEA](https://www.idiap.ch/en/dataset/elea) 
+ELEA dataset can be found on this official website and you need to apply it [ELEA](https://www.idiap.ch/en/dataset/elea).
 
 
 ## Usage
@@ -50,8 +41,15 @@ ulimit -SHn 51200
 python main.py --accelerator 'gpu' --devices 1  
 ```
 
-### Evaluate the model, you need to change model to
+### Evaluate the model, you need to use
 
 ```
 trainer.test(model, data_module)
+```
+
+then
+
+```
+ulimit -SHn 51200
+python main.py --accelerator 'gpu' --devices 1  
 ```
