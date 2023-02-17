@@ -19,7 +19,7 @@ Learning for Personality Traits Recognition".
 - pytorch-lightning 1.7.2   
 - Linux 5.11.0-46-generic
 
-Please follow the paper to pre-process the data. The batch size will influence the performance and see implementation detials in paper.
+Please follow the paper to pre-process the data. The batch size will influence the performance and please see implementation detials in paper.
 
 ## Requirement
 - We use sentence transfomer for text feature extraction. [Sentence Embedding](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion)
