@@ -13,22 +13,18 @@ Learning for Personality Traits Recognition".
 - [Install](#install)
 - [Dataset](#dataset)
 - [Usage](#usage)
-- [Maintainers](#maintainers)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Dependencies
 
 - Python 3.9.1
-- PyTorch toolbox (1.12.1+cu113)
+- pytorch-lightning 1.7.2   
 - Linux 5.11.0-46-generic
 
 Please follow the paper to pre-process the data. 
 
 ## Requirement
-- We use PyG (PyTorch Geometric) for the GNN component in our architecture. [RGCNConv](https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.conv.RGCNConv) and [TransformerConv](https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.conv.TransformerConv)
-- We use PyGCL for GCL (Graph Contrastive Learning) network in out framework. [PyGCL](https://github.com/PyGCL/PyGCL)
-- We use sentence transfomer for text feature extraction. [Sentence Embedding](https://huggingface.co/sentence-transformers/paraphrase-distilroberta-base-v1)
+- We use sentence transfomer for text feature extraction. [Sentence Embedding](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion)
+- We use large X3D network for visual features extraction.[X3D](https://github.com/facebookresearch/pytorchvideo)
 
 
 ## Install
