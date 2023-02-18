@@ -47,7 +47,7 @@ you need to use
 trainer.test(model, data_module)
 ```
 
-then 
+then
 ```
 ulimit -SHn 51200
 python main.py --accelerator 'gpu' --devices 1  
