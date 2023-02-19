@@ -44,7 +44,7 @@ python main.py --accelerator 'gpu' --devices 1
 ### Evaluate the model
 you need to use
 ```
-trainer.test(model, data_module)
+trainer.validate(model, data_module)
 ```
 
 then
