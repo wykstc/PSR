@@ -40,15 +40,3 @@ ELEA dataset can be found on this official website [ELEA](https://www.idiap.ch/e
 ulimit -SHn 51200
 python main.py --accelerator 'gpu' --devices 1  
 ```
-
-### Evaluate the model
-you need to use
-```
-trainer.validate(model, data_module)
-```
-
-then
-```
-ulimit -SHn 51200
-python main.py --accelerator 'gpu' --devices 1  
-```
