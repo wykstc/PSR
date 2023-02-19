@@ -3,6 +3,8 @@
 This is the official implementation for the paper "EMP: Emotion-guided Multi-modal Fusion and Contrastive
 Learning for Personality Traits Recognition".
 
+Because the bug of anonymous github, the README cannot be updated and displayed normally. Thus, I have to add a README file in the EMP source code file. 
+
 # Structure of EMP
 ![image](structure.png)
 
