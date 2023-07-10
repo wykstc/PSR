@@ -14,9 +14,6 @@ from sklearn.cluster import AffinityPropagation
 from sklearn.cluster import KMeans
 from transformers import BertTokenizer, BertModel
 
-#tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
-#ttmodel = BertModel.from_pretrained("bert-base-cased").to('cuda:0')
-
 audioResnet = models.resnet34()
 audioResnet.conv1 = nn.Conv2d(1,64,kernel_size=(1, 24), stride=(1, 4), padding=(0, 24), bias=False)
 imageResnet = torch.hub.load('facebookresearch/pytorchvideo', 'x3d_l', pretrained=True)
@@ -39,14 +36,12 @@ class PsrResNet18(pl.LightningModule):
             *(list(audioResnet.children())[:-1]),
         )
 
-        #self.classification = nn.Sequential(nn.Linear(768,3),nn.Sigmoid() )
-
         self.imageResnet18 = nn.Sequential(
             *(list(imageResnet.blocks.children())[:-1]),
             nn.Conv3d(192, 432, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False),
             nn.BatchNorm3d(432, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
             nn.ReLU(),
-            nn.AvgPool3d(kernel_size=(13, 7, 7), stride=1, padding=0),
+            nn.AvgPool3d(kernel_size=(13, 8, 8), stride=1, padding=0),
             nn.Conv3d(432, 2048, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False)
         )
 
@@ -55,7 +50,7 @@ class PsrResNet18(pl.LightningModule):
             nn.Conv3d(192, 432, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False),
             nn.BatchNorm3d(432, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
             nn.ReLU(),
-            nn.AvgPool3d(kernel_size=(13, 7, 7), stride=1, padding=0),
+            nn.AvgPool3d(kernel_size=(13, 8, 8), stride=1, padding=0),
             nn.Conv3d(432, 2048, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False)
         )
 
@@ -93,6 +88,5 @@ class PsrResNet18(pl.LightningModule):
                 floss = loss + floss
                 resultInter = torch.cat((resultInter, InterFusion), 0)
         result = self.classifierPSRAudioImage(resultInter)
-        gen=torch.tensor([1,0])
         totolloss = (floss+closs)*(1/(current_epoch+1))
-        return  result, gen, totolloss, resultInter,(closs)*(1/(current_epoch+1)),(floss)*(1/(current_epoch+1))
+        return  result, totolloss
