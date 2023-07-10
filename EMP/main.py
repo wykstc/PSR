@@ -9,20 +9,6 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 def load_callbacks():
     callbacks = []
-    callbacks.append(plc.EarlyStopping(
-        monitor='valloss',
-        mode='min',
-        patience=25,
-        min_delta=0.00003
-    ))
-    callbacks.append(plc.ModelCheckpoint(
-        monitor='valloss',
-        filename='bestTrue-{epoch:02d}-{valloss:.3f}',
-        save_top_k=1,
-        mode='min',
-        save_last=True
-    ))
-
     if args.lr_scheduler:
         callbacks.append(plc.LearningRateMonitor(logging_interval='epoch'))
     return callbacks
@@ -32,12 +18,7 @@ def main(args):
     pl.seed_everything(args.seed)
     load_path = None
     data_module = DInterface(**vars(args))
-
-    try:
-        model = MInterface(**vars(args))
-        model.load_from_checkpoint(load_path)
-    except:
-        model = MInterface(**vars(args))
+    model = MInterface(**vars(args))
 
 
     args.callbacks = load_callbacks()
@@ -45,7 +26,6 @@ def main(args):
 
     #model = MInterface.load_from_checkpoint(checkpoint_path="")
     #trainer.test(model, data_module)
-    #trainer.validate(model, data_module)
     trainer.fit(model, data_module)
 
 
