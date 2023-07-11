@@ -7,7 +7,7 @@ import torch.optim as optim
 from torch import nn
 import csv
 import pytorch_lightning as pl
-from model.psrnet import PsrResNet18
+from model.psrnet import Psr
 from model.fusion_methods import AutoFusion
 import numpy as np
 import warnings
@@ -20,7 +20,7 @@ import pickle
 class MInterface(pl.LightningModule):
     def __init__(self, model_name, loss, lr, **kwargs):
         super().__init__()
-        self.psrmodel = PsrResNet18(**kwargs)
+        self.psrmodel = Psr(**kwargs)
         self.fusionModel = AutoFusion(2048)
         self.save_hyperparameters()
         self.criterionL2 = nn.MSELoss(reduction='sum')
