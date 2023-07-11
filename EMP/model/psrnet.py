@@ -36,7 +36,7 @@ class PsrResNet18(pl.LightningModule):
             *(list(audioResnet.children())[:-1]),
         )
 
-        self.imageResnet18 = nn.Sequential(
+        self.imageResnet34 = nn.Sequential(
             *(list(imageResnet.blocks.children())[:-1]),
             nn.Conv3d(192, 432, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False),
             nn.BatchNorm3d(432, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
