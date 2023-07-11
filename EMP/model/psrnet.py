@@ -19,9 +19,9 @@ audioResnet.conv1 = nn.Conv2d(1,64,kernel_size=(1, 24), stride=(1, 4), padding=(
 imageResnet = torch.hub.load('facebookresearch/pytorchvideo', 'x3d_l', pretrained=True)
 faceResnet = torch.hub.load('facebookresearch/pytorchvideo', 'x3d_l', pretrained=True)
 
-class PsrResNet18(pl.LightningModule):
+class Psr(pl.LightningModule):
     def __init__(self, **kwargs):
-        super(PsrResNet18, self).__init__()
+        super(Psr, self).__init__()
 
         self.classifierPSRAudioImage = nn.Sequential(
             nn.Linear(512, 5),
@@ -32,11 +32,11 @@ class PsrResNet18(pl.LightningModule):
 
         self.criterion = SupConLoss(temperature=kwargs['scltemperature'])
 
-        self.audioResnet18 = nn.Sequential(
+        self.audioResnet34 = nn.Sequential(
             *(list(audioResnet.children())[:-1]),
         )
 
-        self.imageResnet34 = nn.Sequential(
+        self.imageX3D = nn.Sequential(
             *(list(imageResnet.blocks.children())[:-1]),
             nn.Conv3d(192, 432, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False),
             nn.BatchNorm3d(432, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
@@ -45,7 +45,7 @@ class PsrResNet18(pl.LightningModule):
             nn.Conv3d(432, 2048, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False)
         )
 
-        self.faceResnet18 = nn.Sequential(
+        self.faceX3D = nn.Sequential(
             *(list(faceResnet.blocks.children())[:-1]),
             nn.Conv3d(192, 432, kernel_size=(1, 1, 1), stride=(1, 1, 1), bias=False),
             nn.BatchNorm3d(432, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
@@ -61,9 +61,9 @@ class PsrResNet18(pl.LightningModule):
     def forward(self, name, audio, image, face, text, emotionEmbedding, fusionModel,classification,current_epoch):
         label_sets = []
         resultInter = torch.tensor(1)
-        aud = self.audioResnet18(audio).squeeze(2).squeeze(2)
-        img = self.imageResnet18(image).squeeze(2).squeeze(2).squeeze(2)
-        faceImg = self.faceResnet18(face).squeeze(2).squeeze(2).squeeze(2)
+        aud = self.audioResnet34(audio).squeeze(2).squeeze(2)
+        img = self.imageX3D(image).squeeze(2).squeeze(2).squeeze(2)
+        faceImg = self.faceX3D(face).squeeze(2).squeeze(2).squeeze(2)
         txt = torch.tensor(self.sbert_model.encode(text),device='cuda')
         allemb = torch.cat((aud, img, faceImg, txt), 1)
         for i in allemb:
