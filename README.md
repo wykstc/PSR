@@ -28,7 +28,6 @@ Chalearn first impressions dataset can be found in [First impressions](https://c
 
 ELEA dataset can be found on this official website [ELEA](https://www.idiap.ch/en/dataset/elea) and you need to apply it.
 
-
 ## Usage
 
 ### Train the model
@@ -37,3 +36,5 @@ ELEA dataset can be found on this official website [ELEA](https://www.idiap.ch/e
 ulimit -SHn 51200
 python main.py --accelerator 'gpu' --devices 1  
 ```
+## Contact
+wang.y.ce@m.titech.ac.jp
