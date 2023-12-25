@@ -28,6 +28,7 @@ Chalearn first impressions dataset can be found in [First impressions](https://c
 
 ELEA dataset can be found on this official website [ELEA](https://www.idiap.ch/en/dataset/elea) and you need to apply it.
 
+Other required files like annotation files and transcriptions all can be found on dataset website.
 ## Usage
 
 ### Train the model
