@@ -87,6 +87,7 @@ author = {Wang, Yusong and Li, Dongyuan and Funakoshi, Kotaro and Okumura, Manab
 title = {EMP: Emotion-Guided Multi-Modal Fusion and Contrastive Learning for Personality Traits Recognition},
 year = {2023},
 }
+```
 
 ## Contact
 wang.y.ce@m.titech.ac.jp
