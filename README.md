@@ -36,9 +36,6 @@ ELEA dataset can be found on this official website [ELEA](https://www.idiap.ch/e
 ulimit -SHn 51200
 python main.py --accelerator 'gpu' --devices 1  
 ```
-## Contact
-wang.y.ce@m.titech.ac.jp
-
 
 # PSR
 
