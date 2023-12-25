@@ -38,3 +38,15 @@ python main.py --accelerator 'gpu' --devices 1
 ```
 ## Contact
 wang.y.ce@m.titech.ac.jp
+
+## Reference
+@inproceedings{10.1145/3591106.3592243,
+author = {Wang, Yusong and Li, Dongyuan and Funakoshi, Kotaro and Okumura, Manabu},
+title = {EMP: Emotion-Guided Multi-Modal Fusion and Contrastive Learning for Personality Traits Recognition},
+year = {2023},
+url = {https://doi.org/10.1145/3591106.3592243},
+booktitle = {Proceedings of the 2023 ACM International Conference on Multimedia Retrieval},
+keywords = {Multimedia Content Extraction and Analysis, Contrastive Learning, Multi-modal Feature Fusion, Personality Traits Recognition},
+location = {Thessaloniki, Greece},
+series = {ICMR '23}
+}
