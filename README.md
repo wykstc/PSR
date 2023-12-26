@@ -45,6 +45,8 @@ If this repository is useful for you, please cite as:
 author = {Wang, Yusong and Li, Dongyuan and Funakoshi, Kotaro and Okumura, Manabu},
 title = {EMP: Emotion-Guided Multi-Modal Fusion and Contrastive Learning for Personality Traits Recognition},
 year = {2023},
+booktitle = {Proceedings of the 2023 ACM International Conference on Multimedia Retrieval},
+pages = {243–252},
 }
 ```
 
